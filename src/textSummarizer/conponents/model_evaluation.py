@@ -1,5 +1,6 @@
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
-from datasets import load_dataset, load_from_disk, load_metric
+from datasets import load_dataset, load_from_disk  # احذف load_metric
+from evaluate import load as load_metric
 import torch
 import pandas as pd
 from tqdm import tqdm
@@ -72,7 +73,7 @@ class ModelEvaluation:
         dataset_samsum_pt['test'][0:10], rouge_metric, model_pegasus, tokenizer, batch_size = 2, column_text = 'dialogue', column_summary= 'summary'
             )
 
-        rouge_dict = dict((rn, score[rn].mid.fmeasure ) for rn in rouge_names )
+        rouge_dict = {rn: score[rn] for rn in rouge_names}
 
         df = pd.DataFrame(rouge_dict, index = ['pegasus'] )
         df.to_csv(self.config.metric_file_name, index=False)
